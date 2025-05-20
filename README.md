@@ -22,7 +22,7 @@ Um bot de Telegram para automatizar o lançamento de notas fiscais no [Grocy](ht
 ## 🧰 Requisitos
 
 - Python 3.10+
-- Conta e API key da OpenAI
+- Conta e API key da OpenAI, somente para a estimativa de validade dos produtos
 - Instância do Grocy com API habilitada
 - Bot do Telegram com token
 
