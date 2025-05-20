@@ -1,0 +1,9 @@
+python-telegram-bot
+openai
+requests
+pytesseract
+Pillow
+python-dotenv
+pdfplumber
+selenium
+beautifulsoup4
