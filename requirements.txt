@@ -6,6 +6,5 @@ pytesseract
 Pillow
 python-dotenv
 selenium
-anticaptchaofficial
 pdfplumber
 beautifulsoup4
