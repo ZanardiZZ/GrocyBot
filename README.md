@@ -1,20 +1,18 @@
 # 🤖 GrocyBot — Integração automática de notas fiscais com Grocy via Telegram
 
-Este bot permite enviar **notas fiscais por QR Code ou PDF** via Telegram. Ele extrai os produtos da nota, permite aplicar **descontos manualmente por item**, calcula validade estimada e **insere automaticamente no Grocy** via API.
+Este bot permite enviar notas fiscais por foto do **QR Code** via Telegram. Ele extrai os produtos da nota, permite aplicar **descontos manualmente por item**, calcula validade estimada e **insere automaticamente no Grocy** via API.
 
 ---
 
 ## 🚀 Funcionalidades
 
-✅ Envio da nota via **foto do QR Code**  
-✅ Extração de dados via **Selenium da SEFAZ-RS**  
-✅ Suporte a PDFs (com parser OpenAI ou regras)  
-✅ Validação e correção dos dados via **Inteligência Artificial**  
-✅ Estimativa automática de **validade dos produtos**  
-✅ Escolha do **estabelecimento de compra**  
-✅ Aplicação manual de **descontos por item**  
-✅ Inserção direta no **estoque do Grocy** via API  
-✅ Suporte a unidades, locais e fallback inteligente  
+✅ Envio da nota via **foto do QR Code** no Telegram
+✅ Extração dos itens usando **Selenium** na SEFAZ-RS
+✅ Estimativa automática de **validade dos produtos**
+✅ Escolha do **estabelecimento de compra**
+✅ Aplicação manual de **descontos por item**
+✅ Inserção direta no **estoque do Grocy** via API
+✅ Suporte a unidades, locais e fallback inteligente
 ✅ Logs e mensagens informativas no Telegram
 
 ---
@@ -25,7 +23,7 @@ Este bot permite enviar **notas fiscais por QR Code ou PDF** via Telegram. Ele e
 - Docker (opcional para facilitar execução)
 - Conta no Grocy com API ativada
 - Bot Telegram com token
-- Chave do Anti-Captcha (opcional, para resolver reCAPTCHA na SEFAZ)
+- Chave do Anti-Captcha (opcional, atualmente não utilizada)
 
 ---
 
@@ -36,7 +34,7 @@ TELEGRAM_TOKEN=seu_token_telegram
 GROCY_URL=http://192.168.0.10/grocy
 GROCY_API_KEY=suachavegrocy
 OPENAI_API_KEY=sua_chave_openai
-ANTICAPTCHA_KEY=sua_chave_anticaptcha
+ANTICAPTCHA_KEY=sua_chave_anticaptcha  # atualmente não utilizado
 DEFAULT_LOCATION_ID=1
 ```
 
@@ -59,7 +57,7 @@ services:
       - GROCY_URL=${GROCY_URL}
       - GROCY_API_KEY=${GROCY_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTICAPTCHA_KEY=${ANTICAPTCHA_KEY}
+      - ANTICAPTCHA_KEY=${ANTICAPTCHA_KEY}  # opcional, atualmente ignorado
       - DEFAULT_LOCATION_ID=1
 ```
 
@@ -87,6 +85,5 @@ services:
 ## 🧠 IA utilizada
 
 - **OpenAI GPT-4o** para:
-  - Corrigir OCR e parser
   - Estimar validade dos produtos
-  - Padronizar nomes dos itens
+  - (Opcional) Padronizar nomes dos itens
