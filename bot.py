@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import asyncio
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (
     ApplicationBuilder,
@@ -70,7 +71,7 @@ async def receber_estabelecimento(update: Update, context: ContextTypes.DEFAULT_
     await update.message.reply_text("📦 Processando nota fiscal com navegador automático...")
 
     try:
-        resultado = extrair_itens_nfe_via_selenium(codigo)
+        resultado = await asyncio.to_thread(extrair_itens_nfe_via_selenium, codigo)
         print(f"[DEBUG] Resultado do parser: {type(resultado)} → {resultado}")
 
         if not isinstance(resultado, (list, tuple)) or len(resultado) != 2:
