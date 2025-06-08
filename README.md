@@ -36,7 +36,11 @@ GROCY_API_KEY=suachavegrocy
 OPENAI_API_KEY=sua_chave_openai
 ANTICAPTCHA_KEY=sua_chave_anticaptcha  # atualmente não utilizado
 DEFAULT_LOCATION_ID=1
+DEBUG_MODE=0
 ```
+
+Quando `DEBUG_MODE` é `1`, os arquivos `debug_nfe_falha.html` e
+`debug_nfe_final.html` são gerados para auxiliar na depuração do Selenium.
 
 ---
 
@@ -59,6 +63,7 @@ services:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - ANTICAPTCHA_KEY=${ANTICAPTCHA_KEY}  # opcional, atualmente ignorado
       - DEFAULT_LOCATION_ID=1
+      - DEBUG_MODE=0
 ```
 
 ---

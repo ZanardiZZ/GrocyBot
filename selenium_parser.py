@@ -7,8 +7,9 @@ from bs4 import BeautifulSoup
 import re
 from datetime import datetime
 from urllib.parse import quote
+from config import DEBUG_MODE
 
-def extrair_itens_nfe_via_selenium(codigo_completo):
+def extrair_itens_nfe_via_selenium(codigo_completo, debug=DEBUG_MODE):
     base = "https://dfe-portal.svrs.rs.gov.br/Dfe/QrCodeNFce?p="
     url = base + quote(codigo_completo, safe="")
 
@@ -27,16 +28,18 @@ def extrair_itens_nfe_via_selenium(codigo_completo):
         )
     except Exception as e:
         html_falha = driver.page_source
-        with open("debug_nfe_falha.html", "w", encoding="utf-8") as f:
-            f.write(html_falha)
+        if debug:
+            with open("debug_nfe_falha.html", "w", encoding="utf-8") as f:
+                f.write(html_falha)
         driver.quit()
         raise Exception("❌ Conteúdo da nota não apareceu a tempo.") from e
 
     html = driver.page_source
     driver.quit()
 
-    with open("debug_nfe_final.html", "w", encoding="utf-8") as f:
-        f.write(html)
+    if debug:
+        with open("debug_nfe_final.html", "w", encoding="utf-8") as f:
+            f.write(html)
 
     soup = BeautifulSoup(html, "html.parser")
     html_text = soup.get_text(" ", strip=True)
