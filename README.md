@@ -7,13 +7,15 @@ Este bot permite enviar notas fiscais por foto do **QR Code** via Telegram. Ele 
 ## 🚀 Funcionalidades
 
 ✅ Envio da nota via **foto do QR Code** no Telegram
-✅ Extração dos itens usando **Selenium** na SEFAZ-RS
+✅ Extração dos itens usando **Selenium** em múltiplas SEFAZ (testado RS, SP e SC)
 ✅ Estimativa automática de **validade dos produtos**
 ✅ Escolha do **estabelecimento de compra**
 ✅ Aplicação manual de **descontos por item**
 ✅ Inserção direta no **estoque do Grocy** via API
 ✅ Suporte a unidades, locais e fallback inteligente
 ✅ Logs e mensagens informativas no Telegram
+
+Compatível com QR Codes das SEFAZ de **RS**, **SP** e **SC**. Outros estados podem funcionar, mas não foram testados.
 
 ---
 

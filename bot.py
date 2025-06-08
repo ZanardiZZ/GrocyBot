@@ -46,13 +46,7 @@ async def handle_foto_qrcode(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text("❌ QR Code inválido ou não detectado.")
         return ConversationHandler.END
 
-    chave_match = re.search(r"p=(.*)", url)
-    if not chave_match:
-        await update.message.reply_text("❌ Não foi possível extrair o código da nota.")
-        return ConversationHandler.END
-
-    codigo_completo = chave_match.group(1)
-    notas_pendentes[update.message.chat_id] = {"codigo": codigo_completo}
+    notas_pendentes[update.message.chat_id] = {"url": url}
 
     reply_markup = ReplyKeyboardMarkup(LOCAIS_CONHECIDOS, one_time_keyboard=True, resize_keyboard=True)
     await update.message.reply_text(f"✅ Código capturado com sucesso!\nQual o nome do estabelecimento?", reply_markup=reply_markup)
@@ -65,11 +59,11 @@ async def receber_estabelecimento(update: Update, context: ContextTypes.DEFAULT_
         await update.message.reply_text("❌ Nenhuma nota aguardando. Envie uma nova.", reply_markup=ReplyKeyboardRemove())
         return ConversationHandler.END
 
-    codigo = notas_pendentes[chat_id]["codigo"]
+    url_nota = notas_pendentes[chat_id]["url"]
     await update.message.reply_text("📦 Processando nota fiscal com navegador automático...")
 
     try:
-        resultado = await asyncio.to_thread(extrair_itens_nfe_via_selenium, codigo)
+        resultado = await asyncio.to_thread(extrair_itens_nfe_via_selenium, url_nota)
         print(f"[DEBUG] Resultado do parser: {type(resultado)} → {resultado}")
 
         if not isinstance(resultado, (list, tuple)) or len(resultado) != 2:
