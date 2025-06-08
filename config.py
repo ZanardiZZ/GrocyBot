@@ -12,6 +12,7 @@ GROCY_API_KEY = os.getenv("GROCY_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTICAPTCHA_KEY = os.getenv("ANTICAPTCHA_KEY")
 DEFAULT_LOCATION_ID = int(os.getenv("DEFAULT_LOCATION_ID", "1"))
+DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() in ("1", "true", "yes")
 
 # Shared OpenAI client
 openai_client = OpenAI(api_key=OPENAI_API_KEY)

@@ -10,7 +10,7 @@ from telegram.ext import (
     ConversationHandler,
     CommandHandler,
 )
-from config import TELEGRAM_TOKEN
+from config import TELEGRAM_TOKEN, DEBUG_MODE
 from qr_reader import extrair_link_qrcode
 from selenium_parser import extrair_itens_nfe_via_selenium
 from grocy_api import send_items_to_grocy, summarize_items
@@ -69,7 +69,7 @@ async def receber_estabelecimento(update: Update, context: ContextTypes.DEFAULT_
     await update.message.reply_text("📦 Processando nota fiscal com navegador automático...")
 
     try:
-        resultado = await asyncio.to_thread(extrair_itens_nfe_via_selenium, codigo)
+        resultado = await asyncio.to_thread(extrair_itens_nfe_via_selenium, codigo, DEBUG_MODE)
         print(f"[DEBUG] Resultado do parser: {type(resultado)} → {resultado}")
 
         if not isinstance(resultado, (list, tuple)) or len(resultado) != 2:
