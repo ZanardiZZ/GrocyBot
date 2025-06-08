@@ -1,49 +1,92 @@
+# 🤖 GrocyBot — Integração automática de notas fiscais com Grocy via Telegram
 
-# 🛒 Grocy Bot Telegram
+Este bot permite enviar **notas fiscais por QR Code ou PDF** via Telegram. Ele extrai os produtos da nota, permite aplicar **descontos manualmente por item**, calcula validade estimada e **insere automaticamente no Grocy** via API.
 
-Bot do Telegram para leitura de notas fiscais (via QR Code, imagem, PDF ou XML) e envio automático dos itens para o Grocy.
+---
 
 ## 🚀 Funcionalidades
-- 📸 Lê notas fiscais via QR Code
-- 🧾 Extrai dados de PDFs de notas
-- 📂 Lê diretamente arquivos XML de NF-e
-- 🔍 Faz OCR de imagens
-- 🤖 Usa IA (OpenAI) para:
-  - Padronizar nomes de produtos
-  - Estimar validade dos produtos
-- 🔗 Envia os itens automaticamente para o Grocy via API
-- 🧠 Cria cache local para nomes de produtos (alias) e validades, reduzindo custo
-- 🧠 Se detecta descontos na nota via QRCode, consulta automaticamente a nota completa na SEFAZ-RS resolvendo o CAPTCHA com Anti-Captcha
 
-## 🔧 Instalação
-1. Clone este repositório
-2. Instale as dependências:
-```
-pip install -r requirements.txt
-```
-3. Crie um arquivo `.env` com base no `.env.example`:
-```
-cp .env.example .env
-```
-4. Execute:
-```
-python bot.py
-```
+✅ Envio da nota via **foto do QR Code**  
+✅ Extração de dados via **Selenium da SEFAZ-RS**  
+✅ Suporte a PDFs (com parser OpenAI ou regras)  
+✅ Validação e correção dos dados via **Inteligência Artificial**  
+✅ Estimativa automática de **validade dos produtos**  
+✅ Escolha do **estabelecimento de compra**  
+✅ Aplicação manual de **descontos por item**  
+✅ Inserção direta no **estoque do Grocy** via API  
+✅ Suporte a unidades, locais e fallback inteligente  
+✅ Logs e mensagens informativas no Telegram
 
-## 📜 .env (Exemplo)
-```
-TELEGRAM_TOKEN=seu_token_aqui
-GROCY_URL=http://ip_ou_dominio_do_seu_grocy
-GROCY_API_KEY=sua_api_key_do_grocy
-OPENAI_API_KEY=sua_api_key_da_openai
-ANTICAPTCHA_API_KEY=sua_api_key_do_anticaptcha
+---
+
+## 🧰 Requisitos
+
+- Python 3.10+
+- Docker (opcional para facilitar execução)
+- Conta no Grocy com API ativada
+- Bot Telegram com token
+- Chave do Anti-Captcha (opcional, para resolver reCAPTCHA na SEFAZ)
+
+---
+
+## 🔐 Variáveis de ambiente (`.env`)
+
+```ini
+TELEGRAM_TOKEN=seu_token_telegram
+GROCY_URL=http://192.168.0.10/grocy
+GROCY_API_KEY=suachavegrocy
+OPENAI_API_KEY=sua_chave_openai
+ANTICAPTCHA_KEY=sua_chave_anticaptcha
 DEFAULT_LOCATION_ID=1
 ```
 
-## 🗒️ Observações
-- O cache de alias é salvo em `alias_cache.json`.
-- Arquivos de debug HTML ficam no diretório raiz.
-- O arquivo `.env` não vai para o git, use o `.env.example` como base.
+---
 
-## 📜 Licença
-MIT
+## 📦 Instalação via Docker
+
+Crie um `docker-compose.yml` com:
+
+```yaml
+version: "3"
+
+services:
+  grocybot:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - GROCY_URL=${GROCY_URL}
+      - GROCY_API_KEY=${GROCY_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTICAPTCHA_KEY=${ANTICAPTCHA_KEY}
+      - DEFAULT_LOCATION_ID=1
+```
+
+---
+
+## 📸 Uso
+
+1. Inicie o bot:
+   ```bash
+   python3 bot.py
+   ```
+
+2. No Telegram, envie uma foto da **nota fiscal com QR Code**.
+
+3. O bot irá:
+   - Extrair os itens
+   - Perguntar o nome do mercado
+   - Exibir os itens com valores
+   - Perguntar se algum item teve desconto (por número)
+
+4. Após confirmação, envia ao Grocy!
+
+---
+
+## 🧠 IA utilizada
+
+- **OpenAI GPT-4o** para:
+  - Corrigir OCR e parser
+  - Estimar validade dos produtos
+  - Padronizar nomes dos itens
