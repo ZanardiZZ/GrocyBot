@@ -14,6 +14,7 @@ venv/
 *.log
 debug_*.html
 nota_qr_*.jpg
+screenshot_*.png
 
 # Arquivos temporários
 *.bak
