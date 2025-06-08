@@ -1,5 +1,4 @@
 import logging
-import os
 import re
 from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (
@@ -10,13 +9,12 @@ from telegram.ext import (
     ConversationHandler,
     CommandHandler,
 )
-from dotenv import load_dotenv
+from config import TELEGRAM_TOKEN
 from qr_reader import extrair_link_qrcode
 from selenium_parser import extrair_itens_nfe_via_selenium
 from grocy_api import send_items_to_grocy, summarize_items
 
-load_dotenv()
-TOKEN = os.getenv("TELEGRAM_TOKEN")
+TOKEN = TELEGRAM_TOKEN
 
 logging.basicConfig(level=logging.INFO)
 
