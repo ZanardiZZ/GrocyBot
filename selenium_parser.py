@@ -18,22 +18,20 @@ def extrair_itens_nfe_via_selenium(codigo_completo):
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1920x1080")
-    driver = webdriver.Chrome(options=options)
-    driver.get(url)
+    with webdriver.Chrome(options=options) as driver:
+        driver.get(url)
 
-    try:
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "tr[id^='Item']"))
-        )
-    except Exception as e:
-        html_falha = driver.page_source
-        with open("debug_nfe_falha.html", "w", encoding="utf-8") as f:
-            f.write(html_falha)
-        driver.quit()
-        raise Exception("❌ Conteúdo da nota não apareceu a tempo.") from e
+        try:
+            WebDriverWait(driver, 20).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "tr[id^='Item']"))
+            )
+        except Exception as e:
+            html_falha = driver.page_source
+            with open("debug_nfe_falha.html", "w", encoding="utf-8") as f:
+                f.write(html_falha)
+            raise Exception("❌ Conteúdo da nota não apareceu a tempo.") from e
 
-    html = driver.page_source
-    driver.quit()
+        html = driver.page_source
 
     with open("debug_nfe_final.html", "w", encoding="utf-8") as f:
         f.write(html)
