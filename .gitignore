@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ambientes virtuais
+.env
+.env.*
+.venv/
+venv/
+
+# Logs e arquivos de debug
+*.log
+debug_*.html
+nota_qr_*.jpg
+
+# Arquivos temporários
+*.bak
+*.swp
+*.tmp
+
+# Cache de IA e OCR
+.cache/
+__cache__/
+openai_cache/
+ocr_cache/
+
+# Dados do Telegram e do Anti-Captcha
+config.json
+telegram_data/
+anticaptcha.log
+
+# Docker e volumes
+*.db
+*.sqlite
+docker-data/
+data/
+volumes/
+
+# Sistema
+.DS_Store
+Thumbs.db

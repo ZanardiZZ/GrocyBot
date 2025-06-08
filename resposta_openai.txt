@@ -1,0 +1,36 @@
+```json
+[
+    {
+        "nome": "CANELAO BOVINO",
+        "quantidade": 0.778,
+        "unidade": "KG",
+        "valor_total": 23.33,
+        "valor_unitario": 29.99,
+        "codigo_barras": null
+    },
+    {
+        "nome": "PATINHO BOVINO",
+        "quantidade": 1.32,
+        "unidade": "KG",
+        "valor_total": 59.39,
+        "valor_unitario": 44.99,
+        "codigo_barras": null
+    },
+    {
+        "nome": "JASMINE BISC. ARROZ S/G ORIGINAL 90G",
+        "quantidade": 1.0,
+        "unidade": "UN",
+        "valor_total": 12.99,
+        "valor_unitario": 12.99,
+        "codigo_barras": "7896283007460"
+    },
+    {
+        "nome": "CHIA EM GRAOS JASMINE 150G",
+        "quantidade": 1.0,
+        "unidade": "UN",
+        "valor_total": 19.99,
+        "valor_unitario": 19.99,
+        "codigo_barras": "7896283005602"
+    }
+]
+```

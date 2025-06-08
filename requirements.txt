@@ -1,0 +1,11 @@
+
+python-telegram-bot
+openai
+requests
+pytesseract
+Pillow
+python-dotenv
+selenium
+anticaptchaofficial
+pdfplumber
+beautifulsoup4
