@@ -26,6 +26,27 @@ LOCAIS = {
     "Stok Center": 7
 }
 
+# Cache para o mapeamento nome -> id dos produtos no Grocy
+PRODUCTS_BY_NAME = {}
+
+
+def refresh_products():
+    """Carrega a lista de produtos do Grocy para o cache."""
+    r = requests.get(f"{GROCY_URL}/api/objects/products", headers=get_headers())
+    if r.status_code == 200:
+        PRODUCTS_BY_NAME.clear()
+        for p in r.json():
+            PRODUCTS_BY_NAME[p["name"].strip().lower()] = p["id"]
+    else:
+        raise Exception(f"Falha ao carregar produtos: {r.status_code} - {r.text}")
+
+
+# Carrega o cache inicialmente
+try:
+    refresh_products()
+except Exception as e:
+    print(f"[ERRO] Ao inicializar cache de produtos: {e}")
+
 def get_headers():
     return {
         "GROCY-API-KEY": API_KEY,
@@ -39,13 +60,14 @@ def get_location_id(nome_loja):
     return None
 
 def buscar_produto_por_nome(nome):
-    r = requests.get(f"{GROCY_URL}/api/objects/products", headers=get_headers())
-    if r.status_code == 200:
-        produtos = r.json()
-        for p in produtos:
-            if p["name"].strip().lower() == nome.strip().lower():
-                return p["id"]
-    return None
+    """Retorna o ID do produto pelo nome usando o cache local."""
+    if not PRODUCTS_BY_NAME:
+        try:
+            refresh_products()
+        except Exception as e:
+            print(f"[ERRO] Não foi possível atualizar lista de produtos: {e}")
+            return None
+    return PRODUCTS_BY_NAME.get(nome.strip().lower())
 
 def send_items_to_grocy(itens, loja_nome, data_compra):
     from datetime import datetime, timedelta
@@ -89,6 +111,7 @@ def send_items_to_grocy(itens, loja_nome, data_compra):
                 erros.append(f"❌ Falha ao criar produto {nome}: {r.status_code} - {erro_msg}")
                 continue
             produto_id = r.json()["created_object_id"]
+            PRODUCTS_BY_NAME[nome.strip().lower()] = produto_id
 
         # Novo formato de endpoint para adicionar estoque
         payload = {
