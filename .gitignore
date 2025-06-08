@@ -27,10 +27,9 @@ __cache__/
 openai_cache/
 ocr_cache/
 
-# Dados do Telegram e do Anti-Captcha
+# Dados do Telegram
 config.json
 telegram_data/
-anticaptcha.log
 
 # Docker e volumes
 *.db
