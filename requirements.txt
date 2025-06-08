@@ -2,6 +2,7 @@
 python-telegram-bot
 openai
 requests
+aiohttp
 pytesseract
 Pillow
 python-dotenv

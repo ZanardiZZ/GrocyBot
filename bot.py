@@ -13,7 +13,7 @@ from telegram.ext import (
 from config import TELEGRAM_TOKEN
 from qr_reader import extrair_link_qrcode
 from selenium_parser import extrair_itens_nfe_via_selenium
-from grocy_api import send_items_to_grocy, summarize_items
+from grocy_api import send_items_to_grocy_async, summarize_items
 
 TOKEN = TELEGRAM_TOKEN
 
@@ -138,7 +138,7 @@ async def aplicar_descontos(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(f"⚠️ Erro na entrada: {e}\nPor favor, envie novamente no formato correto: número:valor, separados por vírgula. Ex: 1:1.00,2:0.50")
             return DESCONTOS_MANUAIS
 
-    erros = send_items_to_grocy(dados["itens"], dados["loja"], dados["data"])
+    erros = await send_items_to_grocy_async(dados["itens"], dados["loja"], dados["data"])
     resumo = summarize_items(dados["itens"])
     resposta = resumo
     if erros:

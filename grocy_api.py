@@ -1,4 +1,6 @@
 import requests
+import aiohttp
+import asyncio
 from validade_util_ia import estimar_validade
 from config import GROCY_URL, GROCY_API_KEY, DEFAULT_LOCATION_ID
 
@@ -134,6 +136,85 @@ def send_items_to_grocy(itens, loja_nome, data_compra):
             erros.append(f"⚠️ Produto '{nome}' ignorado: {erro_msg}")
         else:
             print(f"[OK] Estoque adicionado com sucesso para '{nome}'.")
+
+    return erros
+
+
+async def send_items_to_grocy_async(itens, loja_nome, data_compra):
+    """Versão assíncrona de ``send_items_to_grocy`` usando ``aiohttp``."""
+    from datetime import datetime, timedelta
+
+    location_id = get_location_id(loja_nome)
+    erros = []
+
+    async with aiohttp.ClientSession(headers=get_headers()) as session:
+        for item in itens:
+            nome = item["nome"]
+            unidade_nome = item["unidade"].upper()
+            unidade_id = UNIDADES.get(unidade_nome, 13)
+            quantidade = item["quantidade"]
+            total = item["valor_total"]
+
+            validade_dias = await asyncio.to_thread(estimar_validade, nome)
+
+            try:
+                dt = datetime.strptime(data_compra, "%Y-%m-%d")
+            except Exception:
+                dt = datetime.today()
+
+            validade = (dt + timedelta(days=validade_dias)).strftime("%Y-%m-%d")
+            compra_formatada = dt.strftime("%Y-%m-%d")
+
+            produto_id = buscar_produto_por_nome(nome)
+
+            if not produto_id:
+                produto_data = {
+                    "name": nome,
+                    "qu_id_stock": unidade_id,
+                    "qu_id_purchase": unidade_id,
+                    "qu_id_consume": unidade_id,
+                    "location_id": location_id or DEFAULT_LOCATION_ID,
+                }
+
+                async with session.post(
+                    f"{GROCY_URL}/api/objects/products", json=produto_data
+                ) as r:
+                    if r.status != 200:
+                        try:
+                            data = await r.json()
+                            erro_msg = data.get("error_message", "")
+                        except Exception:
+                            erro_msg = await r.text()
+                        erros.append(
+                            f"❌ Falha ao criar produto {nome}: {r.status} - {erro_msg}"
+                        )
+                        continue
+                    resp = await r.json()
+                    produto_id = resp["created_object_id"]
+                    PRODUCTS_BY_NAME[nome.strip().lower()] = produto_id
+
+            payload = {
+                "amount": quantidade,
+                "best_before_date": validade,
+                "purchased_date": compra_formatada,
+                "location_id": location_id or DEFAULT_LOCATION_ID,
+                "price": round(total, 2),
+            }
+
+            print(f"[DEBUG] Adicionando '{nome}' ao estoque: {payload}")
+            async with session.post(
+                f"{GROCY_URL}/api/stock/products/{produto_id}/add", json=payload
+            ) as r2:
+                if r2.status != 200:
+                    try:
+                        data = await r2.json()
+                        erro_msg = data.get("error_message", "")
+                    except Exception:
+                        erro_msg = await r2.text()
+                    print(f"[ERRO RESPOSTA] {r2.status} - {erro_msg}")
+                    erros.append(f"⚠️ Produto '{nome}' ignorado: {erro_msg}")
+                else:
+                    print(f"[OK] Estoque adicionado com sucesso para '{nome}'.")
 
     return erros
 
