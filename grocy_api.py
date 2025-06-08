@@ -1,13 +1,8 @@
 import requests
-import os
-from dotenv import load_dotenv
 from validade_util_ia import estimar_validade
+from config import GROCY_URL, GROCY_API_KEY, DEFAULT_LOCATION_ID
 
-load_dotenv()
-
-GROCY_URL = os.getenv("GROCY_URL").rstrip("/")
-API_KEY = os.getenv("GROCY_API_KEY")
-DEFAULT_LOCATION_ID = int(os.getenv("DEFAULT_LOCATION_ID", "1"))
+API_KEY = GROCY_API_KEY
 
 UNIDADES = {
     "KG": 5,

@@ -1,11 +1,4 @@
-import os
-from openai import OpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
-client = OpenAI(api_key=OPENAI_API_KEY)
+from config import openai_client
 
 # Cache de itens já pesquisados com validade
 cache_validades = {}
@@ -20,7 +13,7 @@ def estimar_validade(produto_nome):
             "Responda apenas com o número de dias (ex: 30)."
         )
 
-        response = client.chat.completions.create(
+        response = openai_client.chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3
