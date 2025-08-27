@@ -10,8 +10,7 @@ from urllib.parse import urlparse
 
 def extrair_itens_nfe_via_selenium(url_completo):
     """Abre a URL do QRCode exatamente como recebida."""
-    parsed = urlparse(url_completo)
-    url = parsed.geturl()
+    # Use the URL directly, no need to parse and reconstruct
 
     options = Options()
     options.add_argument("--headless")
