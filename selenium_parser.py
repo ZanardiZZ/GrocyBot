@@ -42,7 +42,7 @@ def extrair_itens_nfe_via_selenium(url_completo):
     html_text = soup.get_text(" ", strip=True)
 
     data_compra = None
-    match = re.search(r"(Protocolo de Autorização|Data de Emissão|Emissão):?\s*\d*\s*(\d{2}/\d{2}/\d{4})", html_text)
+    match = re.search(r"(Protocolo de Autorização|Data de Emissão|Emissão):?\s*\d+\s*(\d{2}/\d{2}/\d{4})", html_text)
     if match:
         try:
             data_br = match.group(2)
