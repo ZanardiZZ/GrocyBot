@@ -25,7 +25,6 @@ Compatível com QR Codes das SEFAZ de **RS**, **SP** e **SC**. Outros estados po
 - Docker (opcional para facilitar execução)
 - Conta no Grocy com API ativada
 - Bot Telegram com token
-- Chave do Anti-Captcha (opcional, atualmente não utilizada)
 
 ---
 
@@ -36,7 +35,6 @@ TELEGRAM_TOKEN=seu_token_telegram
 GROCY_URL=http://192.168.0.10/grocy
 GROCY_API_KEY=suachavegrocy
 OPENAI_API_KEY=sua_chave_openai
-ANTICAPTCHA_KEY=sua_chave_anticaptcha  # atualmente não utilizado
 DEFAULT_LOCATION_ID=1
 ```
 
@@ -59,7 +57,6 @@ services:
       - GROCY_URL=${GROCY_URL}
       - GROCY_API_KEY=${GROCY_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - ANTICAPTCHA_KEY=${ANTICAPTCHA_KEY}  # opcional, atualmente ignorado
       - DEFAULT_LOCATION_ID=1
 ```
 
