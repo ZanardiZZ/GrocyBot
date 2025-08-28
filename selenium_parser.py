@@ -6,11 +6,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
-from urllib.parse import quote
+from urllib.parse import urlparse
 
-def extrair_itens_nfe_via_selenium(codigo_completo):
-    base = "https://dfe-portal.svrs.rs.gov.br/Dfe/QrCodeNFce?p="
-    url = base + quote(codigo_completo, safe="")
+def extrair_itens_nfe_via_selenium(url_completo):
+    """Abre a URL do QRCode exatamente como recebida."""
+    # Use the URL directly, no need to parse and reconstruct
 
     options = Options()
     options.add_argument("--headless")
@@ -42,10 +42,10 @@ def extrair_itens_nfe_via_selenium(codigo_completo):
     html_text = soup.get_text(" ", strip=True)
 
     data_compra = None
-    match = re.search(r"Protocolo de Autorização:\s*\d+\s*(\d{2}/\d{2}/\d{4})", html_text)
+    match = re.search(r"(Protocolo de Autorização|Data de Emissão|Emissão):?\s*\d+\s*(\d{2}/\d{2}/\d{4})", html_text)
     if match:
         try:
-            data_br = match.group(1)
+            data_br = match.group(2)
             data_dt = datetime.strptime(data_br, "%d/%m/%Y")
             data_compra = data_dt.strftime("%Y-%m-%d")
         except:
@@ -53,6 +53,8 @@ def extrair_itens_nfe_via_selenium(codigo_completo):
 
     itens = []
     linhas = soup.select("tr[id^=Item]")
+    if not linhas:
+        linhas = soup.select("tr.linhaProd, tr.prod")
 
     print(f"[DEBUG] {len(linhas)} itens encontrados na página final.")
 
@@ -66,13 +68,20 @@ def extrair_itens_nfe_via_selenium(codigo_completo):
                 return 0.0
         return 0.0
 
+    def first_sel(tag, selectors):
+        for sel in selectors:
+            el = tag.select_one(sel)
+            if el:
+                return el
+        return None
+
     for linha in linhas:
         try:
-            nome_tag = linha.select_one("span.txtTit")
-            qtd_tag = linha.select_one("span.Rqtd")
-            und_tag = linha.select_one("span.RUN")
-            unit_tag = linha.select_one("span.RvlUnit")
-            total_tag = linha.select_one("td.txtTit span.valor")
+            nome_tag = first_sel(linha, ["span.txtTit", "span.nome", "td:nth-of-type(1)"])
+            qtd_tag = first_sel(linha, ["span.Rqtd", "span.qtd", "td:nth-of-type(2)"])
+            und_tag = first_sel(linha, ["span.RUN", "span.un", "td:nth-of-type(3)"])
+            unit_tag = first_sel(linha, ["span.RvlUnit", "span.vlUnit", "td:nth-of-type(4)"])
+            total_tag = first_sel(linha, ["td.txtTit span.valor", "span.valor", "td:nth-of-type(5)"])
 
             nome = nome_tag.get_text(strip=True)
             qtd = parse_num(qtd_tag.text)

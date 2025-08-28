@@ -2,6 +2,7 @@ from pyzbar.pyzbar import decode
 from PIL import Image
 
 def extrair_link_qrcode(imagem_path):
+    """Retorna a URL completa contida no QR Code."""
     imagem = Image.open(imagem_path)
     resultados = decode(imagem)
     for resultado in resultados:
