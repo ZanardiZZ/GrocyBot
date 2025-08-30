@@ -19,7 +19,7 @@ def extrair_itens_nfe_via_selenium(url_completo):
     options.add_argument("--disable-gpu")
     options.add_argument("--window-size=1920x1080")
     with webdriver.Chrome(options=options) as driver:
-        driver.get(url)
+        driver.get(url_completo)
 
         try:
             WebDriverWait(driver, 20).until(
@@ -81,12 +81,13 @@ def extrair_itens_nfe_via_selenium(url_completo):
             unit_tag = first_sel(linha, ["span.RvlUnit", "span.vlUnit", "td:nth-of-type(4)"])
             total_tag = first_sel(linha, ["td.txtTit span.valor", "span.valor", "td:nth-of-type(5)"])
 
-            nome = nome_tag.get_text(strip=True)
-            qtd = parse_num(qtd_tag.text)
-            unidade = re.search(r"UN: ?([A-Z]+)", und_tag.text)
+            nome = nome_tag.get_text(strip=True) if nome_tag else ""
+            qtd = parse_num(qtd_tag.text) if qtd_tag else 0.0
+            unidade_text = und_tag.text if und_tag else ""
+            unidade = re.search(r"UN: ?([A-Z]+)", unidade_text)
             unidade = unidade.group(1).upper() if unidade else "UN"
-            val_unit = parse_num(unit_tag.text)
-            val_total = parse_num(total_tag.text)
+            val_unit = parse_num(unit_tag.text) if unit_tag else 0.0
+            val_total = parse_num(total_tag.text) if total_tag else 0.0
 
             print(f"[DEBUG] {nome} - QTD extraída: {qtd}, UN: {unidade}, Total: R${val_total:.2f}")
 
